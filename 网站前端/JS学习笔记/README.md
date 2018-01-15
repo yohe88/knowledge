@@ -205,9 +205,9 @@
         1. 状态改变：`.reject()`、`.rejectWith()`、`.resolve()`、`.rejectWith()`。
         2. 触发的行为
 
-            1. 继续向下传递状态：`.done()`、`.fail()`、`.always()`。
+            1. 向下传递调用方法的对象本身：`.done()`、`.fail()`、`.always()`。
 
-                >返回为Deferred对象。
+                >Deferred对象调用则返回Deferred对象；Promise对象调用则返回Promise对象。
 
                 ```javascript
                 var deferred = $.Deferred()
@@ -251,7 +251,9 @@
                 //deferred.resolve('信息');
                 //deferred.reject('信息');
                 ```
-            3. 且判断：`jQuery.when()`。
+            3. 且判断：`jQuery.when(Deferred对象或其他值)`。
+
+                若传入的不是Deferred对象，则当做立即执行Deferred对象的`resolve(其他值)`。
 
                 >返回为Promise对象。
         3. 改变为Promise对象：`.promise()`。
