@@ -2218,7 +2218,7 @@
         4. 如果`try`中代码是以`return`、`continue`或`break`终止的，必须先执行完`finally`中的语句后再执行相应的`try`中的返回语句。
         5. 在`catch`中接收的错误，不会再向上提交给浏览器。
 
-        >`try`内的作用域不为内部异步操作保留：`try {setTimeout(() => {错误语法}, 0)} catch (e) {}`不会捕获异步操作中的错误（同理，在`Promise`或`async-await`等语法中的异步错误也无法被捕获）。可以在异步回调内部再包一层`try-catch`。
+        >`try`内的作用域不为内部异步操作保留：`try {setTimeout(() => {错误语法}, 0)} catch (e) {}`不会捕获异步操作中的错误（同理，在`Promise`或`async-await`等语法中的异步错误也无法被捕获，但可以捕获`await`的`reject`）。可以在异步回调内部再包一层`try-catch`。
     2. `window.onerror`
 
         >jQuery不建议`on`等方式绑定`window`的`error`事件，只通过`window.onerror`定义。
@@ -3203,6 +3203,7 @@
             ```javascript
             // e.g.
             String([1, 2, 3]);  // '1,2,3'
+            String([1, [2], [3, [4, [5, 6]]]]);  // '1,2,3,4,5,6'
             String({a: 1});     // '[object Object]''
             ```
 

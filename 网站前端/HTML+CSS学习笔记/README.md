@@ -768,7 +768,7 @@
         >数字数量有限制：[Unicode](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/前端内容/基础知识.md#unicode)。
 
 ### 帧动画（逐帧动画、序列帧、序列帧动画）
-`animation-timing-function`的`steps`（[缓动函数](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-timing-function)）配合`@keyframes`改变雪碧图的`background-position/transform`。
+`animation-timing-function`的`steps`（[缓动函数](https://developer.mozilla.org/zh-CN/docs/Web/CSS/animation-timing-function)）配合`@keyframes`改变雪碧图的`transform/background-position`。
 
 <details>
 <summary>e.g.</summary>
@@ -967,7 +967,7 @@
                 }
             }
             ```
-        3. 父级`display: flex; justify-content: center;`；或父级`display: flex;`，子级`margin: 0 auto;`。
+        3. 父级`display: flex; justify-content: center;`；或父级`display: flex;`，单子级`margin: 0 auto;`。
 
             >兼容ie11+。
 
@@ -976,11 +976,13 @@
                 display: flex;
                 justify-content: center;
             }
+
             /* 或 */
+
             .father {
                 display: flex;
 
-                .son {
+                .son {  /* 单子级的margin左右占满父级 */
                     margin: 0 auto;
                 }
             }
@@ -1165,119 +1167,122 @@
             ```
 
 ### 自适应宽度布局
->`float`节点：可以填补在**之后节点**的水平`margin`内（`padding`内不可以）；不可以填补在**之前节点**的水平`margin`内。
+1. [`flex`实现](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/弹性盒子.md#flex布局实践)
+2. `float`
 
-1. 中间内容自适应，两边固定（中间内容最后加载）
+    >`float`节点：可以填补在**之后节点**的水平`margin`内（`padding`内不可以）；不可以填补在**之前节点**的水平`margin`内。
 
-    ```html
-    <style type="text/css">
-        .float-l {
-            float: left;
-            _display: inline;
-            width: 左边块宽度;
-        }
-        .float-r {
-            float: right;
-            _display: inline;
-            width: 右边块宽度;
-        }
-        .middle {
-            margin-left: 大于等于左边块宽度;
-            margin-right: 大于等于右边块宽度;
-        }
-    </style>
+    1. 中间内容自适应，两边固定（中间内容最后加载）
 
-    <div class="clearfix">
-        <div class="float-l">左边内容</div>
-        <div class="float-r">右边内容</div>
-        <div class="middle">中间内容</div>
-    </div>
-    ```
+        ```html
+        <style type="text/css">
+            .float-l {
+                float: left;
+                _display: inline;
+                width: 左边块宽度;
+            }
+            .float-r {
+                float: right;
+                _display: inline;
+                width: 右边块宽度;
+            }
+            .middle {
+                margin-left: 大于等于左边块宽度;
+                margin-right: 大于等于右边块宽度;
+            }
+        </style>
 
-    >1. DOM结构不能颠倒，需要中间结构放最后;
-    >2. 节点上能设定`clear: both;`。
-2. 中间内容自适应，两边固定（中间内容最先加载）
-
-    >所谓的“双飞翼布局”。
-
-    ```html
-    <style type="text/css">
-        .main-out,
-        .float-l,
-        .float-r {
-            float: left;
-            _display: inline;
-        }
-        .middle-out {
-            width: 100%;
-        }
-        .middle-in {
-            margin: 0 大于等于右边块宽度 0 大于等于左边块宽度;
-        }
-        .float-l {
-            width: 左边块宽度;
-            margin-left: -100%;
-        }
-        .float-r {
-            width: 右边块宽度;
-            margin-left: -左边块宽度;
-        }
-    </style>
-
-    <div class="clearfix">
-        <div class="middle-out">
-            <div class="middle-in">
-                中间内容
-            </div>
+        <div class="clearfix">
+            <div class="float-l">左边内容</div>
+            <div class="float-r">右边内容</div>
+            <div class="middle">中间内容</div>
         </div>
-        <div class="float-l">左边内容</div>
-        <div class="float-r">右边内容</div>
-    </div>
-    ```
+        ```
 
-    >1. DOM结构不能颠倒，需要中间结构放最前;
-    >2. 节点上能设定`clear: both;`。
-3. 中间与两边内容都自适应
+        >1. DOM结构不能颠倒，需要中间结构放最后;
+        >2. 节点上能设定`clear: both;`。
+    2. 中间内容自适应，两边固定（中间内容最先加载）
 
-    ```html
-    <style type="text/css">
-        .float-l {
-            float: left;
-            _display: inline;
-        }
-        .float-r {
-            float: right;
-            _display: inline;
-        }
-        .middle {
-            display: table-cell;
-            *display: inline-block;
-            width: 9999px;
-            *width: auto;
-        }
-    </style>
+        >所谓的“双飞翼布局”。
 
-    <div class="clearfix">
-        <div class="float-l">左边内容</div>
-        <div class="float-r">右边内容（没有足够空间则整体换行）</div>
-        <div class="middle">中间内容（没有足够空间则整体换行）</div>
-    </div>
-    ```
+        ```html
+        <style type="text/css">
+            .main-out,
+            .float-l,
+            .float-r {
+                float: left;
+                _display: inline;
+            }
+            .middle-out {
+                width: 100%;
+            }
+            .middle-in {
+                margin: 0 大于等于右边块宽度 0 大于等于左边块宽度;
+            }
+            .float-l {
+                width: 左边块宽度;
+                margin-left: -100%;
+            }
+            .float-r {
+                width: 右边块宽度;
+                margin-left: -左边块宽度;
+            }
+        </style>
 
-    >1. DOM结构不能颠倒，需要中间结构放最后;
-    >2. 节点上能设定`clear: both;`;
-    >3. 完全由内容决定布局；
-    >4. 第一块内容要给第二块内容留下足够空间，否则第二块放不下会整个换行；第一块+第二块要给第三块留下足够空间，否则第三块放不下会整个换行。
+        <div class="clearfix">
+            <div class="middle-out">
+                <div class="middle-in">
+                    中间内容
+                </div>
+            </div>
+            <div class="float-l">左边内容</div>
+            <div class="float-r">右边内容</div>
+        </div>
+        ```
+
+        >1. DOM结构不能颠倒，需要中间结构放最前;
+        >2. 节点上能设定`clear: both;`。
+    3. 中间与两边内容都自适应
+
+        ```html
+        <style type="text/css">
+            .float-l {
+                float: left;
+                _display: inline;
+            }
+            .float-r {
+                float: right;
+                _display: inline;
+            }
+            .middle {
+                display: table-cell;
+                *display: inline-block;
+                width: 9999px;
+                *width: auto;
+            }
+        </style>
+
+        <div class="clearfix">
+            <div class="float-l">左边内容</div>
+            <div class="float-r">右边内容（没有足够空间则整体换行）</div>
+            <div class="middle">中间内容（没有足够空间则整体换行）</div>
+        </div>
+        ```
+
+        >1. DOM结构不能颠倒，需要中间结构放最后;
+        >2. 节点上能设定`clear: both;`;
+        >3. 完全由内容决定布局；
+        >4. 第一块内容要给第二块内容留下足够空间，否则第二块放不下会整个换行；第一块+第二块要给第三块留下足够空间，否则第三块放不下会整个换行。
 
 ### [`flex`](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/弹性盒子.md#flex语法)优雅解决布局、自适应问题
-1. 不使用flex导致不方便处理的问题：
+1. 不使用`flex`导致不方便处理的问题：
 
     1. 栅格系统
     2. [自适应宽度布局](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/README.md#自适应宽度布局)
     3. [水平居中、垂直居中](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/README.md#水平居中垂直居中)
     4. [粘性页脚](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/实现具体业务.md#粘性页脚)
     5. [多列等高](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/实现具体业务.md#多列等高)
-2. flex具体解决方案：[`flex`布局实践](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/弹性盒子.md#flex布局实践)。
+2. `flex`具体解决方案：[`flex`布局实践](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/弹性盒子.md#flex布局实践)。
 
 ### 渲染性能（rendering performance）
 
@@ -1427,7 +1432,7 @@
             >布局抖动（layout thrashing）：快速多次进行强制同步布局。
         3. 使用离线DOM操作样式完毕，再添加或替换到文档中；把文档中要操作的DOM设置为`display: none;`再操作样式，操作完毕后恢复复显示。
         4. `position: absollute/fixed;`的元素reflow开销较小。
-        5. 使用[`flexbox`](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/弹性盒子.md#弹性盒子)布局（对于相同数量的元素、视觉外观，flex布局的时间更少）。
+        5. 使用[`flex`](https://github.com/realgeoffrey/knowledge/blob/master/网站前端/HTML+CSS学习笔记/弹性盒子.md#弹性盒子)布局（对于相同数量的元素、视觉外观，flex布局的时间更少）。
     4. 简化绘制的复杂度、减小绘制区域
 
         合理划分层，动静分离，可避免大面积重绘。
