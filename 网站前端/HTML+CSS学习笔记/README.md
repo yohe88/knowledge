@@ -233,10 +233,17 @@
         省略号。
 
     >需要和`overflow: hidden;`、`white-space: nowrap;`配合产生溢出。
-4. `word-spacing`
+4. `flex-wrap`
+
+    Flex容器内，一条主轴排不下的情况，如何换行。
+
+    1. `nowrap`（默认）：不换行。
+    2. `wrap`：换行，第一行在上方。
+    3. `wrap-reverse`：换行，第一行在下方。
+5. `word-spacing`
 
     空白字符包裹的非空白字符的间距。
-5. `letter-spacing`
+6. `letter-spacing`
 
     字符的间距。
 
